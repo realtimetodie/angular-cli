@@ -68,6 +68,11 @@ export interface AngularAppEngineManifest {
   readonly basePath: string;
 
   /**
+   * The source locale of the server application.
+   */
+  readonly sourceLocale: string;
+
+  /**
    * A readonly record mapping supported locales to their respective entry-point paths.
    * Each entry consists of:
    * - `key`: The locale identifier (e.g., 'en', 'fr').

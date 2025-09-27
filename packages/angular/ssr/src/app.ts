@@ -72,6 +72,11 @@ interface AngularServerAppOptions {
    * If not provided, a new `Hooks` instance is created.
    */
   hooks?: Hooks;
+
+  /**
+   * An array of platform providers for the rendering process.
+   */
+  providers?: StaticProvider[];
 }
 
 /**
@@ -95,6 +100,13 @@ export class AngularServerApp {
   readonly hooks: Hooks;
 
   /**
+   * An array of platform providers for the rendering process.
+   *
+   * @see {@link AngularServerAppOptions.providers} for more details.
+   */
+  readonly providers?: StaticProvider[];
+
+  /**
    * Constructs an instance of `AngularServerApp`.
    *
    * @param options Optional configuration options for the server application.
@@ -102,6 +114,7 @@ export class AngularServerApp {
   constructor(private readonly options: Readonly<AngularServerAppOptions> = {}) {
     this.allowStaticRouteRender = this.options.allowStaticRouteRender ?? false;
     this.hooks = options.hooks ?? new Hooks();
+    this.providers = options.providers;
 
     if (this.manifest.inlineCriticalCss) {
       this.inlineCriticalCssProcessor = new InlineCriticalCssProcessor((path: string) => {
@@ -264,7 +277,7 @@ export class AngularServerApp {
     }
 
     const url = new URL(request.url);
-    const platformProviders: StaticProvider[] = [];
+    const platformProviders: StaticProvider[] = this.providers ?? [];
 
     const {
       manifest: { bootstrap, locale },

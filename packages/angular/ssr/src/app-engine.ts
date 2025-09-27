@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import type { StaticProvider } from '@angular/core';
 import type { AngularServerApp, getOrCreateAngularServerApp } from './app';
 import { Hooks } from './hooks';
 import { getPotentialLocaleIdFromUrl, getPreferredLocale } from './i18n';
@@ -41,6 +42,13 @@ export class AngularAppEngine {
   static ɵhooks = /* #__PURE__*/ new Hooks();
 
   /**
+   * An array of platform providers for the rendering process.
+   *
+   * @private
+   */
+  static ɵproviders?: StaticProvider[];
+
+  /**
    * The manifest for the server application.
    */
   private readonly manifest = getAngularAppEngineManifest();
@@ -55,7 +63,7 @@ export class AngularAppEngine {
   /**
    * A cache that holds entry points, keyed by their potential locale string.
    */
-  private readonly entryPointsCache = new Map<string, Promise<EntryPointExports>>();
+  protected readonly entryPointsCache = new Map<string, Promise<EntryPointExports>>();
 
   /**
    * Handles an incoming HTTP request by serving prerendered content, performing server-side rendering,
@@ -150,6 +158,7 @@ export class AngularAppEngine {
     const serverApp = ɵgetOrCreateAngularServerApp({
       allowStaticRouteRender: AngularAppEngine.ɵallowStaticRouteRender,
       hooks: AngularAppEngine.ɵhooks,
+      providers: AngularAppEngine.ɵproviders,
     });
 
     return serverApp;

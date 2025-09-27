@@ -52,6 +52,7 @@ export function createAngularSsrInternalMiddleware(
 
       const angularServerApp = ɵgetOrCreateAngularServerApp({
         allowStaticRouteRender: true,
+        providers: cachedAngularServerApp?.providers,
       });
 
       // Only Add the transform hook only if it's a different instance.
@@ -129,6 +130,7 @@ export async function createAngularSsrExternalMiddleware(
 
       if (cachedAngularAppEngine !== AngularAppEngine) {
         AngularAppEngine.ɵallowStaticRouteRender = true;
+        AngularAppEngine.ɵproviders = cachedAngularAppEngine?.ɵproviders;
         AngularAppEngine.ɵhooks.on('html:transform:pre', async ({ html, url }) => {
           const processedHtml = await server.transformIndexHtml(url.pathname, html);
 
